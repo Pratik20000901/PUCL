@@ -1,0 +1,60 @@
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+    public static List<Integer> minChairs(List<String> simulations) {
+        List<Integer> resultList = new ArrayList<>();
+
+        for (String simulation : simulations) { // Change to String
+            int T = 0;
+            int A = 0;
+
+            for (char c : simulation.toCharArray()) { // Iterate over characters in the string
+                if (c == 'C' || c == 'U') {
+                    if (A == 0) {
+                        T++;
+                    } else {
+                        A--;
+                    }
+                } else if (c == 'R' || c == 'L') {
+                    A++;
+                }
+            }
+            resultList.add(T); // Add T value for current string
+        }
+
+        return resultList;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int simulationsCount = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<String> simulations = IntStream.range(0, simulationsCount).mapToObj(i -> {
+            try {
+                return bufferedReader.readLine();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }).collect(toList());
+
+        List<Integer> result = Result.minChairs(simulations);
+
+        bufferedWriter.write(
+            result.stream()
+                .map(Object::toString)
+                .collect(joining("\n"))
+            + "\n"
+        );
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
